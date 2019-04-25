@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: "domain-service"
+spec:
+  selector:
+    app: "domain"
+  ports:
+    - protocol: "TCP"
+      port: 5000
+      targetPort: 5000

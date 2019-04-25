@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: "front-service"
+spec:
+  selector:
+    app: "front"
+  ports:
+    - protocol: "TCP"
+      port: 5000
+      targetPort: 5000

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /front/*
+        backend:
+          serviceName: front-service
+          servicePort: 5000
+      - path: /domain/*
+        backend:
+          serviceName: front-domain
+          servicePort: 5000
