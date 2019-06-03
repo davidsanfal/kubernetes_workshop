@@ -15,5 +15,5 @@ spec:
           servicePort: 5000
       - path: /domain/*
         backend:
-          serviceName: front-domain
+          serviceName: domain-service
           servicePort: 5000
