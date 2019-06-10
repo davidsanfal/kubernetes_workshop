@@ -23,7 +23,7 @@ kubectl create -f custom-metrics/config-map-custom-metrics.yaml
 kubectl delete pods adapter-prometheus-adapter-*
 kubectl create -f hpa.yaml
 
-# Test
+# Test the hpa.
 
 pip install -r requirements.txt
 python main.py
