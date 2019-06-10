@@ -21,6 +21,7 @@ helm install --name adapter stable/prometheus-adapter --values custom-metrics/va
 kubectl delete configmaps adapter-prometheus-adapter
 kubectl create -f custom-metrics/config-map-custom-metrics.yaml
 kubectl delete pods adapter-prometheus-adapter-*
+kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1 | jq .
 kubectl create -f hpa.yaml
 
 # Test the hpa.
