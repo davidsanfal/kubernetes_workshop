@@ -1,4 +1,4 @@
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: hpa-sim
@@ -13,5 +13,15 @@ spec:
   metrics:
   - type: Pods
     pods:
-      metricName: myapp_response_time_sum
-      targetAverageValue: 20
+      metric:
+        name: myapp_response_time_sum
+      target:
+        type: AverageValue
+        averageValue: 10
+  - type: Pods
+    pods:
+      metric:
+        name: myapp_client_connected
+      target:
+        type: AverageValue
+        averageValue: 20
