@@ -11,7 +11,19 @@ metadata:
 data:
   config.yaml: |
     rules:
-    - seriesQuery: '{__name__= "myapp_client_connected"}'
+    - seriesQuery: 'myapp_response_time_sum'
+      seriesFilters: []
+      resources:
+        overrides:
+          k8s_namespace:
+            resource: namespace
+          k8s_pod_name:
+            resource: pod
+      name:
+        matches: "myapp_response_time_sum"
+        as: ""
+      metricsQuery: 'rate(myapp_response_time_sum[20s]) / rate(myapp_response_time_count[20s])'
+    - seriesQuery: 'myapp_client_connected'
       seriesFilters: []
       resources:
         overrides:
