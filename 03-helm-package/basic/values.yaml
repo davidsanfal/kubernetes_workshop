@@ -1,0 +1,16 @@
+# Default values for basic.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+data:
+  minReplicas: 2
+  moreReplicas: 3
+
+image:
+  repository: nginx
+  tag: stable
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
