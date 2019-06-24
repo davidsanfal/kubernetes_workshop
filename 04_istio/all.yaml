@@ -12,8 +12,7 @@ spec:
     spec:
       containers:
       - name: domain
-        imagePullPolicy: Never
-        image: domain:latest
+        image: davidsanfal/domain-k8s:latest
         env:
         - name: DOMAIN_API_VERSION
           value: v2
@@ -70,8 +69,7 @@ spec:
     spec:
       containers:
       - name: front
-        imagePullPolicy: Never
-        image: front:latest
+        image: davidsanfal/front-k8s:latest
         env:
         - name: DOMAIN_API_URL
           value: http://domain-service:5000
