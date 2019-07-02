@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: internal-resources-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: internal-resources
+        version: v1
+    spec:
+      containers:
+      - name: internal-resources
+        image: davidsanfal/internal-resources-k8s:latest
+        env:
+        - name: PROMETHEUS_API_URL
+          value: http://domain-service:5000
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: CONTAINER_NAME
+          value: internal-resources
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "internal-resources-service"
+spec:
+  selector:
+    app: "internal-resources"
+  ports:
+    - protocol: "TCP"
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: internal-resources-destination
+spec:
+  host: internal-resources-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: internal-resources-route
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - internal-resources-gateway
+  http:
+  - route:
+    - destination:
+        host: internal-resources-service
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: internal-resources-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
