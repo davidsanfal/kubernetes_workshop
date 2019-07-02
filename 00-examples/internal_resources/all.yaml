@@ -14,14 +14,14 @@ spec:
       - name: internal-resources
         image: davidsanfal/internal-resources-k8s:latest
         env:
+        - name: CONTAINER_NAME
+          value: internal-resources
         - name: PROMETHEUS_API_URL
-          value: http://domain-service:5000
+          value: http://prom-mon-prometheus-server.monitoring.svc.cluster.local
         - name: POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: CONTAINER_NAME
-          value: internal-resources
 ---
 kind: Service
 apiVersion: v1
