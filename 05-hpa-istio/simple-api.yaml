@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-api-deployment
+  labels:
+    app: simple-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-api
+  template:
+    metadata:
+      labels:
+        app: simple-api
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+      - name: simple-api
+        image: zhiminwen/hpa-sim:v1
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: LISTENING_PORT
+            value: "8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-api-service
+  labels:
+    app: simple-api
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30010
+    protocol: TCP
+    name: http
+  selector:
+    app: simple-api
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: simple-api-route
+spec:
+  hosts:
+  - simple-api-service
+  http:
+  - route:
+    - destination:
+        host: simple-api-service
+        subset: v1
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: simple-api-destination
+spec:
+  host: simple-api-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: simple-api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: simple-api-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Pods
+    pods:
+      metric:
+        name: myapp_response_time_sum
+      target:
+        type: AverageValue
+        averageValue: 10
+  - type: Pods
+    pods:
+      metric:
+        name: myapp_client_connected
+      target:
+        type: AverageValue
+        averageValue: 20

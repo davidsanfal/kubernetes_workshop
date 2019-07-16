@@ -1,0 +1,3 @@
+prometheus:
+  url: http://prom-mon-prometheus-server.monitoring.svc.cluster.local
+  port: 80
