@@ -6,7 +6,7 @@
 
 ```sh
 git clone https://gitlab.com/roberto-majadas/minikube-istio-metallb.git
-cd minikube-istio-metallb cluster
+cd minikube-istio-metallb
 ./boostrap.sh
 ```
 

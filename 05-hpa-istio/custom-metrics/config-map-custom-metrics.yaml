@@ -22,7 +22,7 @@ data:
       name:
         matches: "myapp_response_time_sum"
         as: ""
-      metricsQuery: 'rate(myapp_response_time_sum[2m]) / rate(myapp_response_time_count[2m])'
+      metricsQuery: 'rate(myapp_response_time_sum{<<.LabelMatchers>>}[1m]) / rate(myapp_response_time_count{<<.LabelMatchers>>}[1m])'
     - seriesQuery: 'myapp_client_connected'
       seriesFilters: []
       resources:
